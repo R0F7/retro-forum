@@ -1,27 +1,29 @@
 const postsContainer = document.getElementById('posts-container');
 const ul = document.getElementById('UL');
 let count = 0;
-const readCount = document.getElementById('')
+const searchBtn = document.getElementById('search-btn');
 
-const dataLoad= async () =>{
-    const response = await fetch('https://openapi.programming-hero.com/api/retro-forum/posts?');
+const dataLoad = async (url) => {
+    const response = await fetch(url);
     const postsData = await response.json();
     const posts = postsData.posts;
     // console.log(posts);
+
     displayPost(posts)
 }
 
 const displayPost = (posts) => {
+    postsContainer.innerHTML = '';
     posts.forEach(post => {
         // console.log(post);
         const div = document.createElement('div');
-       
+
         div.innerHTML = `
         <div class="card rounded-3xl mb-3 lg:mb-6 bg-[rgba(121,125,252,0.10)] border border-[#797DFC] p-5 lg:p-10 grid grid-cols-10">
     
         <div class="lg:w-24 w-[88%] h-14 lg:h-24 col-span-2 lg:col-span-1 relative">
             <img class="rounded-xl" src="${post.image}" alt="">
-            ${post.isActive?`<div id="activity" class="w-3 h-3 lg:w-4 lg:h-4 rounded-full bg-[#10B981] absolute -right-1 -top-1 "></div>`:'<div id="activity" class="w-3 h-3 lg:w-4 lg:h-4 rounded-full bg-[#FF3434] absolute -right-1 -top-1 "></div>'}
+            ${post.isActive ? `<div id="activity" class="w-3 h-3 lg:w-4 lg:h-4 rounded-full bg-[#10B981] absolute -right-1 -top-1 "></div>` : '<div id="activity" class="w-3 h-3 lg:w-4 lg:h-4 rounded-full bg-[#FF3434] absolute -right-1 -top-1 "></div>'}
         </div>
 
         <div class="col-span-8 lg:col-span-9">
@@ -91,11 +93,11 @@ const displayPost = (posts) => {
     </div>
         `;
         postsContainer.appendChild(div);
-        
+
     });
 }
 
-const showTitle=(title,view)=>{
+const showTitle = (title, view) => {
     // console.log(title,view);
     const li = document.createElement('li');
     const readCount = document.getElementById('read-count');
@@ -110,13 +112,25 @@ const showTitle=(title,view)=>{
       <span>${view}</span>
       </span>
       `;
-      ul.appendChild(li);
-      
+    ul.appendChild(li);
+
     count++;
     readCount.innerText = count;
 
 }
 
+const searchPosts = (postCategories) => {
+    const postCategory = postCategories.toLowerCase();
+    console.log(postCategory);
+    dataLoad(`https://openapi.programming-hero.com/api/retro-forum/posts?category=${postCategory}`);
+}
 
 
-dataLoad();
+searchBtn.addEventListener('click', () => {
+    const inputField = document.getElementById('search-filed');
+    const searchCategory = inputField.value;
+    searchPosts(searchCategory);
+})
+
+dataLoad('https://openapi.programming-hero.com/api/retro-forum/posts?');
+
