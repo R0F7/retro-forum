@@ -1,4 +1,7 @@
 const postsContainer = document.getElementById('posts-container');
+const ul = document.getElementById('UL');
+let count = 0;
+const readCount = document.getElementById('')
 
 const dataLoad= async () =>{
     const response = await fetch('https://openapi.programming-hero.com/api/retro-forum/posts?');
@@ -67,7 +70,7 @@ const displayPost = (posts) => {
                         <span class="text-[rgba(18,19,45,0.60)] text-[16px] font-normal">${post.posted_time} min</span>
                     </div>
                 </div>
-                <div onclick="showTitle(&quot;${post.title}&quot;)">
+                <div onclick="showTitle(&quot;${post.title}&quot;,'${post.view_count}')">
                     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"
                         fill="none">
                         <g clip-path="url(#clip0_57_425)">
@@ -92,8 +95,28 @@ const displayPost = (posts) => {
     });
 }
 
-const showTitle=(title)=>{
-    console.log(title);
+const showTitle=(title,view)=>{
+    // console.log(title,view);
+    const li = document.createElement('li');
+    const readCount = document.getElementById('read-count');
+
+    li.innerHTML = `
+    <p>${title}</p> 
+    <span class="flex gap-1">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <path d="M11.6667 14C11.6667 14.6188 11.9125 15.2123 12.3501 15.6499C12.7877 16.0875 13.3812 16.3333 14 16.3333C14.6188 16.3333 15.2123 16.0875 15.6499 15.6499C16.0875 15.2123 16.3333 14.6188 16.3333 14C16.3333 13.3812 16.0875 12.7877 15.6499 12.3501C15.2123 11.9125 14.6188 11.6667 14 11.6667C13.3812 11.6667 12.7877 11.9125 12.3501 12.3501C11.9125 12.7877 11.6667 13.3812 11.6667 14Z" stroke="#12132D" stroke-opacity="0.6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M24.5 14C21.7 18.6667 18.2 21 14 21C9.8 21 6.3 18.6667 3.5 14C6.3 9.33333 9.8 7 14 7C18.2 7 21.7 9.33333 24.5 14Z" stroke="#12132D" stroke-opacity="0.6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>${view}</span>
+      </span>
+      `;
+      ul.appendChild(li);
+      
+    count++;
+    readCount.innerText = count;
+
 }
+
+
 
 dataLoad();
