@@ -3,6 +3,7 @@ const ul = document.getElementById('UL');
 let count = 0;
 const searchBtn = document.getElementById('search-btn');
 const loadingSpiner = document.getElementById('loading-spiner');
+const loadingSpiner2 = document.getElementById('loading-spiner2');
 
 const dataLoad = (url) => {
 
@@ -15,7 +16,7 @@ const dataLoad = (url) => {
         // console.log(posts);
 
         displayPost(posts);
-        
+
         loadingSpiner.classList.add('hidden');
     }, 2000)
 
@@ -32,7 +33,7 @@ const displayPost = (posts) => {
     
         <div class="lg:w-24 w-[88%] h-14 lg:h-24 col-span-2 lg:col-span-1 relative">
             <img class="rounded-xl" src="${post.image}" alt="">
-            ${post.isActive ? `<div id="activity" class="w-3 h-3 lg:w-4 lg:h-4 rounded-full bg-[#10B981] absolute -right-1 -top-1 "></div>` : '<div id="activity" class="w-3 h-3 lg:w-4 lg:h-4 rounded-full bg-[#FF3434] absolute -right-1 -top-1 "></div>'}
+            <div id="activity" class="w-3 h-3 lg:w-4 lg:h-4 rounded-full ${post.isActive ?`bg-[#10B981]`:`bg-[#FF3434]`} absolute -right-1 -top-1 "></div>
         </div>
 
         <div class="col-span-8 lg:col-span-9">
@@ -44,7 +45,7 @@ const displayPost = (posts) => {
             <h4 class="text-[#12132D] text-[15px] lg:text-xl font-bold mb-1.5 lg:mb-4">${post.title}</h4>
             <p class="text-[rgba(18,19,45,0.60)] text-sm lg:text-[16px] font-normal mb-2 lg:mb-5">${post.description}</p>
             <div class="border-dashed border lg:border-2 mb-2 lg:mb-6"></div>
-            <div class="flex flex-col gap-2.5 lg:gap-0 lg:flex-row justify-between">
+            <div class="flex gap-2.5 lg:gap-0 flex-row justify-between">
                 <div class="flex gap-4 lg:gap-7">
                     <div class="flex gap-1 lg:gap-3">
                         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"
@@ -129,23 +130,18 @@ const showTitle = (title, view) => {
 }
 
 const searchPosts = (postCategory) => {
-    // const postCategory = postCategories.toLowerCase();
-    // // console.log(postCategory);
+    // console.log(postCategory);
     dataLoad(`https://openapi.programming-hero.com/api/retro-forum/posts?category=${postCategory}`);
 }
 
 searchBtn.addEventListener('click', () => {
     const inputField = document.getElementById('search-filed');
-    const searchCategory = inputField.value.toLowerCase();
+    const searchCategory = inputField.value.toLowerCase().trim();
     // console.log(searchCategory);
 
     if (searchCategory.length > 0 && searchCategory === 'comedy' || searchCategory === 'coding' || searchCategory === 'music') {
-        // loadingSpiner.classList.remove('hidden');
-        // setTimeout(() => {
-            // loadingSpiner.classList.add('hidden');
-            searchPosts(searchCategory);
-        // }, 2000)
-    }else{
+        searchPosts(searchCategory);
+    } else {
         alert('Please input category name.Example: Comedy, Coding, Music');
     }
 
@@ -159,10 +155,15 @@ dataLoad('https://openapi.programming-hero.com/api/retro-forum/posts');
 
 const cardContainer = document.getElementById('card-container');
 
-const latestPostData = async () => {
-    const res = await fetch('https://openapi.programming-hero.com/api/retro-forum/latest-posts');
-    const data = await res.json();
-    latestPostShow(data);
+const latestPostData = () => {
+    loadingSpiner2.classList.remove('hidden');
+    console.log(loadingSpiner2);
+    setTimeout(async () => {
+        const res = await fetch('https://openapi.programming-hero.com/api/retro-forum/latest-posts');
+        const data = await res.json();
+        latestPostShow(data);
+        loadingSpiner2.classList.add('hidden');
+    },2000)
 }
 
 const latestPostShow = (posts) => {
